@@ -1,19 +1,20 @@
 <?php
 /*
-Plugin Name: oidc
-Plugin URI: https://github.com/joshp23/YOURLS-OIDC
-Description: Enables OpenID Connect user authentication
-Version: 0.3.1
-Author: Josh Panter
-Author URI: https://unfettered.net
-*/
-// No direct call
-if( !defined( 'YOURLS_ABSPATH' ) ) die();
-if( !defined( 'OIDC_BYPASS_YOURLS_AUTH' ) ) 
-	define( 'OIDC_BYPASS_YOURLS_AUTH', false );
-	
+ * Plugin Name: OpenID Connect
+ * Plugin URI: https://github.com/gsu-library/YOURLS-OIDC/
+ * Description: Enables OpenID Connect user authentication.
+ * Version: 1.0.0
+ * Author: Georgia State University Library
+ * Author URI: https://library.gsu.edu/
+ */
+
+
+defined('YOURLS_ABSPATH') || exit;
+
+// TODO: if no autoloader throw error about running composer
 require_once __DIR__.'/vendor/autoload.php';
 global $oidc;
+
 $oidc = new Jumbojett\OpenIDConnectClient(
 			OIDC_BASE_URL,
 			OIDC_CLIENT_NAME,
@@ -60,7 +61,7 @@ yourls_add_filter( 'shunt_check_IP_flood', 'oidc_check_ip_flood' );
 function oidc_check_ip_flood ( $ip ) {
 	// don't touch API logic
 	if ( yourls_is_API() ) return false;
-	
+
 	yourls_do_action( 'pre_check_ip_flood', $ip ); // at this point $ip can be '', check it if your plugin hooks in here
 
 	// Raise white flag if installing or if no flood delay defined
