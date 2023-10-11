@@ -38,8 +38,5 @@ $oidc_profiles = array(
 define( 'OIDC_BYPASS_YOURLS_AUTH', true );
 ```
 
-## Attribution/License
-Copyright 2019 Joshua Panter https://github.com/joshp23
-
-The following code is a derivative work which is licensed  under GPLv3. This code therefore is  
-also licensed under the terms of the GNU Public License, verison 3.
+## Attribution
+Forked from [joshp23/YOURLS-OIDC](https://github.com/joshp23/YOURLS-OIDC) by [Joshua Panter](https://github.com/joshp23).
