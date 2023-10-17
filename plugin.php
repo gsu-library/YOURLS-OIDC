@@ -47,15 +47,19 @@ if(!class_exists('Oidc_Auth')) {
          if(!defined('OIDC_PROVIDER_URL') ||
             empty(OIDC_PROVIDER_URL) ||
             !defined('OIDC_CLIENT_ID') ||
-            empty(OIDC_CLIENT_ID) ||
-            !defined('OIDC_CLIENT_SECRET')
+            empty(OIDC_CLIENT_ID)
          ) {
             //todo: throw yourls error
             return false;
          }
 
+         $clientSecret = '';
+         if(defined('OIDC_CLIENT_SECRET')) {
+            $clientSecret = OIDC_CLIENT_SECRET;
+         }
+
          require_once(__DIR__ . '/vendor/autoload.php');
-         $this->oidc = new Jumbojett\OpenIDConnectClient(OIDC_PROVIDER_URL, OIDC_CLIENT_ID, OIDC_CLIENT_SECRET);
+         $this->oidc = new Jumbojett\OpenIDConnectClient(OIDC_PROVIDER_URL, OIDC_CLIENT_ID, $clientSecret);
 
          // Set authentication methods.
          if(defined('OIDC_AUTH_METHODS') && !empty(OIDC_AUTH_METHODS)) {
