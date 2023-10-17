@@ -10,32 +10,33 @@ Version: 1.0.0
 This plugin enables authentication against a generic OpenID Connect server in YOURLS. 
 
 ## Requirements
-todo: set requirements in composer?
-- YOURLS 7.4.0
-- The [jumbojett/OpenID-Connect-PHP](https://github.com/jumbojett/OpenID-Connect-PHP) library
-- `composer`, `php-curl`, `php-xml`, and `php-json`
+- PHP >= 7.4.0
+- [jumbojett/OpenID-Connect-PHP](https://github.com/jumbojett/OpenID-Connect-PHP) library
+- Composer
+- PHP-cURL extension
+- PHP-JSON extension
 
 ## Installation
-1. Download this repo and extract the `oidc` folder into `YOURLS/user/plugins/`
-1. `cd` to the directory you just created
-1. Run `composer install` in that directory to fetch the OIDC library
-1. Define OIDC server parameters (see below)
-1. configure OIDC, see below.
-1. Enable in Admin
+1. Clone this repository into the `YOURLS_BASE_FOLDER/user/plugins/` folder.
+1. Run `composer install` in that directory to fetch the OIDC library and its requirements.
+1. Configure the plugin (see below).
+1. Activate the plugin in the Manage Plugins menu.
 
-### Configuration
-Config: `user/config.php` file.
-```
-// oidc server
-define( 'OIDC_BASE_URL', 'https://keycloak.example.com/auth/realms/master/' );
-define( 'OIDC_CLIENT_NAME', 'YOURLS' );
-define( 'OIDC_CLIENT_SECRET', 'YOUR-SUPER-SECRET-HASH' );
-// Option 1: link OIDC users to local YOURLS users
-$oidc_profiles = array( 
-	'YOURLS_UNAME' => 'sub attribute from OIDC provider',
-);
-// Option 2, all users on OIDC platform have YOURLS accounts. uses 'preferred_username' attribute
-define( 'OIDC_BYPASS_YOURLS_AUTH', true );
+## Configuration
+Copy and configure the code below into the YOURLS configuration file: `YOURLS_BASE_FOLDER/user/config.php`. The provider URL and client ID are required and must not be empty. All other configuration constants are optional.
+
+```php
+// OpenID Connect configuration
+const OIDC_PROVIDER_URL = '';
+const OIDC_CLIENT_ID = '';
+const OIDC_CLIENT_SECRET = '';
+const OIDC_AUTH_METHODS = [];
+const OIDC_SCOPES = [];
+const OIDC_REDIRECT_URL = '';
+const OIDC_TOKEN_ENDPOINT = '';
+const OIDC_USER_INFO_ENDPOINT = '';
+const OIDC_LOGOUT_ENDPOINT = '';
+const OIDC_ERROR_MESSAGE = '';
 ```
 
 ## Attribution
