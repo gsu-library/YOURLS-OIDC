@@ -142,7 +142,6 @@ if(!class_exists('OIDC_Auth')) {
 
          // todo: save and pass token id?
          $this->oidc->signOut(null, YOURLS_SITE);
-         echo '<pre>'.print_r($this->oidc, true).'</pre>';
       }
 
 
@@ -152,8 +151,14 @@ if(!class_exists('OIDC_Auth')) {
        * @return void
        */
       public function login_form_top() {
+         $message = 'User account not found.';
+
+         if(defined('OIDC_ERROR_MESSAGE') && !empty(OIDC_ERROR_MESSAGE)) {
+            $message = OIDC_ERROR_MESSAGE;
+         }
+
          echo "<style>.error{display:none;}</style>";
-         echo "<p class='error' style='display:inline !important;'>User account not found.</p>";
+         echo "<p class='error' style='display:inline !important;'>$message</p>";
          echo "\n<!--\n";
       }
 
@@ -170,61 +175,3 @@ if(!class_exists('OIDC_Auth')) {
 
    $oidcAuth = new OIDC_Auth();
 }
-
-
-//todo: check to see if this ip flood check is need, I don't think so
-
-// Largely unchanged: only checking auth against w/ cookies.
-// yourls_add_filter( 'shunt_check_IP_flood', 'oidc_check_ip_flood' );
-function oidc_check_ip_flood ( $ip ) {
-   // don't touch API logic
-   if ( yourls_is_API() ) return false;
-
-   yourls_do_action( 'pre_check_ip_flood', $ip ); // at this point $ip can be '', check it if your plugin hooks in here
-
-   // Raise white flag if installing or if no flood delay defined
-   if(
-      ( defined('YOURLS_FLOOD_DELAY_SECONDS') && YOURLS_FLOOD_DELAY_SECONDS === 0 ) ||
-      !defined('YOURLS_FLOOD_DELAY_SECONDS') ||
-      yourls_is_installing()
-   )
-      return true;
-
-   // Don't throttle logged in users XXX and don't trigger OIDC login!
-   if( yourls_is_private() && isset( $_COOKIE[ yourls_cookie_name() ] ) && yourls_check_auth_cookie() ) {
-      yourls_store_cookie( YOURLS_USER );
-      return true;
-   }
-
-   // Don't throttle whitelist IPs
-   if( defined( 'YOURLS_FLOOD_IP_WHITELIST' ) && YOURLS_FLOOD_IP_WHITELIST ) {
-      $whitelist_ips = explode( ',', YOURLS_FLOOD_IP_WHITELIST );
-      foreach( (array)$whitelist_ips as $whitelist_ip ) {
-         $whitelist_ip = trim( $whitelist_ip );
-         if ( $whitelist_ip == $ip )
-            return true;
-      }
-   }
-
-   $ip = ( $ip ? yourls_sanitize_ip( $ip ) : yourls_get_IP() );
-
-   yourls_do_action( 'check_ip_flood', $ip );
-
-   global $ydb;
-   $table = YOURLS_DB_TABLE_URL;
-
-   $lasttime = $ydb->fetchValue( "SELECT `timestamp` FROM $table WHERE `ip` = :ip ORDER BY `timestamp` DESC LIMIT 1", array('ip' => $ip) );
-   if( $lasttime ) {
-      $now = date( 'U' );
-      $then = date( 'U', strtotime( $lasttime ) );
-      if( ( $now - $then ) <= YOURLS_FLOOD_DELAY_SECONDS ) {
-         // Flood!
-         yourls_do_action( 'ip_flood', $ip, $now - $then );
-         yourls_die( yourls__( 'Too many URLs added too fast. Slow down please.' ), yourls__( 'Too Many Requests' ), 429 );
-      }
-   }
-
-   return true;
-}
-
-?>
