@@ -12,11 +12,11 @@
 defined('YOURLS_ABSPATH') || exit;
 
 
-if(!class_exists('OIDC_Auth')) {
+if(!class_exists('Oidc_Auth')) {
    /**
-    * OIDC_Auth class
+    * Oidc_Auth class
     */
-   class OIDC_Auth {
+   class Oidc_Auth {
       private $oidc;
 
 
@@ -164,7 +164,7 @@ if(!class_exists('OIDC_Auth')) {
 
 
       /**
-       * Closing tag to hid the login form.
+       * Closing tag to hide the login form.
        *
        * @return void
        */
@@ -173,5 +173,5 @@ if(!class_exists('OIDC_Auth')) {
       }
    }
 
-   $oidcAuth = new OIDC_Auth();
+   $oidcAuth = new Oidc_Auth();
 }
