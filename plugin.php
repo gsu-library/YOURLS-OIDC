@@ -39,7 +39,7 @@ if(!class_exists('Oidc_Auth')) {
       private function load_configuration() {
          // Autoloader.
          if(!file_exists(__DIR__ . '/vendor/autoload.php')) {
-            //todo: throw yourls error
+            trigger_error('Autoloader not found for YOURLS-OIDC plugin, run \'composer install\' in ' . __DIR__, E_USER_WARNING);
             return false;
          }
 
@@ -49,7 +49,7 @@ if(!class_exists('Oidc_Auth')) {
             !defined('OIDC_CLIENT_ID') ||
             empty(OIDC_CLIENT_ID)
          ) {
-            //todo: throw yourls error
+            trigger_error('Required configuration not found for YOURLS-OIDC, please see the readme.', E_USER_WARNING);
             return false;
          }
 
