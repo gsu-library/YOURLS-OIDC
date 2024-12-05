@@ -126,6 +126,7 @@ if(!class_exists('Oidc_Auth')) {
          } else {
             $user = $userInfo->user_name;
          }
+
          if(array_key_exists($user, $yourls_user_passwords)) {
             yourls_set_user($user);
             yourls_redirect('.'); // clears URL parameters
