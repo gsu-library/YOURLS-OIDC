@@ -121,7 +121,12 @@ if(!class_exists('Oidc_Auth')) {
          $this->oidc->authenticate();
          $userInfo = $this->oidc->requestUserInfo();
 
-         $user = $userInfo->user_name;
+         if(defined('OIDC_USERNAME_FIELD') && !empty(OIDC_USERNAME_FIELD)) {
+            $user = $userInfo->{OIDC_USERNAME_FIELD};
+         } else {
+            $user = $userInfo->user_name;
+         }
+
          if(array_key_exists($user, $yourls_user_passwords)) {
             yourls_set_user($user);
             yourls_redirect('.'); // clears URL parameters
